@@ -15,8 +15,6 @@
         #chat-container {
             border: 1px solid #ccc;
             width: 100%;
-            max-width: 400px;
-            /* set a max width for desktop */
             height: 80vh;
             /* a responsive height based on viewport height */
             display: flex;
@@ -72,25 +70,6 @@
 
         #input-box button:hover {
             background: #126ccd;
-        }
-
-        /* Media query for smaller screens */
-        @media (max-width: 600px) {
-            #chat-container {
-                max-width: 100%;
-                height: 90vh;
-                /* slightly taller on mobile */
-            }
-
-            #messages {
-                padding: 0.5rem;
-            }
-
-            #input-box input[type="text"],
-            #input-box button {
-                font-size: 0.9rem;
-                padding: 0.5rem;
-            }
         }
     </style>
 </head>
