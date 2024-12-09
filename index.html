@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Embedded Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #chat-container {
+            border: 1px solid #ccc;
+            width: 300px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+        }
+
+        .message.user {
+            text-align: right;
+            color: #004085;
+        }
+
+        .message.assistant {
+            text-align: left;
+            color: #386994;
+        }
+
+        #input-box {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+
+        #input-box input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+        }
+
+        #input-box button {
+            padding: 10px;
+            border: none;
+            background: #386994;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #input-box button:hover {
+            background: #4A84B7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="chat-container">
+        <div id="messages"></div>
+        <div id="input-box">
+            <input type="text" id="user_input" placeholder="Ecris un message..." />
+            <button id="send_button">Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        const userInput = document.getElementById('user_input');
+        const sendButton = document.getElementById('send_button');
+
+        const API_URL = "https://elysia-fastapi.onrender.com/chat"; // Replace with your actual endpoint
+
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function appendMessage(content, role) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${role}`;
+            msgDiv.textContent = content;
+            messagesDiv.appendChild(msgDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+            appendMessage(text, 'user');
+            userInput.value = '';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ "user_text": text, "thread_id": null })
+
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                // The "response" field contains the assistant's messages keyed by role.
+                // Find assistant's reply (this depends on your server's returned structure)
+                if (data.response && data.response.assistant) {
+                    // If assistant is a list of messages, join them or just use the last one
+                    const assistantMessages = data.response.assistant;
+                    const assistantReply = Array.isArray(assistantMessages)
+                        ? assistantMessages.join(' ')
+                        : assistantMessages;
+
+                    appendMessage(assistantReply, 'assistant');
+                } else {
+                    appendMessage("No assistant reply returned.", 'assistant');
+                }
+            } catch (e) {
+                appendMessage("Error: " + e.message, 'assistant');
+            }
+        }
+    </script>
+
+</body>
+
+</html>
