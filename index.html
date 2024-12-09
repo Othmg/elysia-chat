@@ -8,24 +8,34 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         #chat-container {
             border: 1px solid #ccc;
-            width: 300px;
-            height: 500px;
+            width: 100%;
+            max-width: 400px;
+            /* set a max width for desktop */
+            height: 80vh;
+            /* a responsive height based on viewport height */
             display: flex;
             flex-direction: column;
+            margin: 0 auto;
+            /* center horizontally on larger screens */
+            box-sizing: border-box;
         }
 
         #messages {
             flex: 1;
             overflow-y: auto;
-            padding: 10px;
+            padding: 1rem;
         }
 
         .message {
-            margin-bottom: 10px;
+            margin-bottom: 1rem;
+            word-wrap: break-word;
+            line-height: 1.4;
         }
 
         .message.user {
@@ -35,7 +45,7 @@
 
         .message.assistant {
             text-align: left;
-            color: #386994;
+            color: #383d41;
         }
 
         #input-box {
@@ -45,21 +55,42 @@
 
         #input-box input[type="text"] {
             flex: 1;
-            padding: 10px;
+            padding: 0.75rem;
             border: none;
             outline: none;
+            font-size: 1rem;
         }
 
         #input-box button {
-            padding: 10px;
+            padding: 0.75rem 1rem;
             border: none;
-            background: #386994;
+            background: #0056b3;
             color: #fff;
             cursor: pointer;
+            font-size: 1rem;
         }
 
         #input-box button:hover {
-            background: #4A84B7;
+            background: #126ccd;
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 600px) {
+            #chat-container {
+                max-width: 100%;
+                height: 90vh;
+                /* slightly taller on mobile */
+            }
+
+            #messages {
+                padding: 0.5rem;
+            }
+
+            #input-box input[type="text"],
+            #input-box button {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -115,11 +146,7 @@
                 }
 
                 const data = await response.json();
-
-                // The "response" field contains the assistant's messages keyed by role.
-                // Find assistant's reply (this depends on your server's returned structure)
                 if (data.response && data.response.assistant) {
-                    // If assistant is a list of messages, join them or just use the last one
                     const assistantMessages = data.response.assistant;
                     const assistantReply = Array.isArray(assistantMessages)
                         ? assistantMessages.join(' ')
