@@ -14,24 +14,32 @@
         }
 
         #chat-container {
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
+            /* lighter border */
             width: 100%;
             max-width: none;
             /* no internal max width */
+            flex-direction: column;
 
-            height: 80vh;
+            height: 100%;
 
             display: flex;
             flex-direction: column;
             margin: 0 auto;
             /* center horizontally on larger screens */
             box-sizing: border-box;
+            border-radius: 0.5rem;
+            /* slightly more rounded corners */
+
+            background: #f9f9f9;
+            /* light, neutral background for a soothing feel */
         }
 
         #messages {
             flex: 1;
             overflow-y: auto;
             padding: 1rem;
+            box-sizing: border-box;
         }
 
         .message {
@@ -53,14 +61,16 @@
         #input-box {
             display: flex;
             border-top: 1px solid #ccc;
+            align-items: center;
         }
 
         #input-box input[type="text"] {
-            flex: 1;
             padding: 0.75rem;
             border: none;
             outline: none;
             font-size: 1rem;
+            border-radius: 0 0 0 0.5rem;
+            /* slightly round left corner if desired */
         }
 
         #input-box button {
@@ -70,6 +80,8 @@
             color: #fff;
             cursor: pointer;
             font-size: 1rem;
+            border-radius: 0 0 0.5rem 0;
+            /* slightly round right corner */
         }
 
         #input-box button:hover {
