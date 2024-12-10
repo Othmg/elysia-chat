@@ -90,6 +90,8 @@
         const messagesDiv = document.getElementById('messages');
         const userInput = document.getElementById('user_input');
         const sendButton = document.getElementById('send_button');
+        const urlParams = new URLSearchParams(window.location.search);
+        const assistantId = urlParams.get('assistant_id') || 'default_assistant_id';
 
         const API_URL = "https://elysia-fastapi.onrender.com/chat"; // Replace with your actual endpoint
 
@@ -119,8 +121,7 @@
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ "user_text": text, "thread_id": null })
-
+                    body: JSON.stringify({ "user_text": text, "assistant_id": assistantId })
                 });
 
                 if (!response.ok) {
