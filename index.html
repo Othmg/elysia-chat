@@ -121,7 +121,9 @@
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ "user_text": text, "assistant_id": assistantId })
+                    body: JSON.stringify({
+                        "user_text": text, "assistant_id": assistantId, "thread_id": threadId // Include thread_id if it exists })
+                    })
                 });
 
                 if (!response.ok) {
@@ -129,6 +131,7 @@
                 }
 
                 const data = await response.json();
+                threadId = data.thread_id; // Store the thread_id from the response
                 if (data.response && data.response.assistant) {
                     const assistantMessages = data.response.assistant;
                     const assistantReply = Array.isArray(assistantMessages)
