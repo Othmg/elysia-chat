@@ -123,9 +123,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        "user_text": text,
-                        "assistant_id": assistantId,
-                        "thread_id": threadId // Include thread_id if it exists })
+                        "user_text": text, "assistant_id": assistantId, "thread_id": threadId // Include thread_id if it exists })
                     })
                 });
 
@@ -135,10 +133,18 @@
 
                 const data = await response.json();
                 threadId = data.thread_id; // Store the thread_id from the response
-                appendMessage(data.assistant_text, 'assistant');
-            } catch (error) {
-                console.error('Error:', error);
-                appendMessage('Error: ' + error.message, 'error');
+                if (data.response && data.response.assistant) {
+                    const assistantMessages = data.response.assistant;
+                    const assistantReply = Array.isArray(assistantMessages)
+                        ? assistantMessages.join(' ')
+                        : assistantMessages;
+
+                    appendMessage(assistantReply, 'assistant');
+                } else {
+                    appendMessage("No assistant reply returned.", 'assistant');
+                }
+            } catch (e) {
+                appendMessage("Error: " + e.message, 'assistant');
             }
         }
     </script>
