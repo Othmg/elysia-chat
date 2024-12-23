@@ -94,6 +94,7 @@
         const assistantId = urlParams.get('assistant_id') || 'default_assistant_id';
 
         const API_URL = "https://elysia-fastapi.onrender.com/chat"; // Replace with your actual endpoint
+        let threadId = null; // Variable to store thread_id
 
         sendButton.addEventListener('click', sendMessage);
         userInput.addEventListener('keypress', function (e) {
