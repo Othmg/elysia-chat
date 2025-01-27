@@ -179,6 +179,23 @@
             }
         }
 
+        /* For iPad portrait */
+        @media (max-width: 768px) {
+            iframe {
+                max-width: 600px;
+                height: 500px;
+            }
+        }
+
+        /* For mobile */
+        @media (max-width: 480px) {
+            iframe {
+                max-width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
