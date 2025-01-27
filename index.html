@@ -2,27 +2,61 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Embedded Chat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Support Chat</title>
     <style>
+        :root {
+            --serene-green: #88c9a1;
+            --calm-blue: #a3d5d3;
+            --soft-grey: #f5f5f5;
+            --crisis-red: #ff4d4d;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             height: 100vh;
+            background: #f9fafb;
         }
 
         #chat-container {
-            border: 1px solid #ccc;
+            border: 1px solid rgba(0, 0, 0, 0.05);
             width: 100%;
             height: 100vh;
             display: flex;
             flex-direction: column;
             margin: 0 auto;
             box-sizing: border-box;
+            backdrop-filter: blur(2px);
         }
 
+        /* Crisis Support Banner */
+        .crisis-banner {
+            background: #fff3f3;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 2px solid #ffd6d6;
+            display: none;
+        }
+
+        #emergency-btn {
+            background: var(--crisis-red);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        #emergency-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Messages Area */
         #messages {
             flex: 1;
             overflow-y: auto;
@@ -32,73 +66,141 @@
             gap: 1rem;
         }
 
+        /* Message Bubbles */
         .message {
-            display: block;
-            width: fit-content;
+            position: relative;
             max-width: 75%;
             padding: 12px 16px;
-            border-radius: 8px;
-            word-wrap: break-word;
-            line-height: 1.4;
+            border-radius: 15px;
+            margin: 8px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(5px);
             animation: fadeIn 0.3s ease-in-out;
-            clear: both;
+            transition: transform 0.2s ease;
         }
 
         .user-message {
-            background-color: #f4f4f6;
+            background: rgba(255, 255, 255, 0.95);
             color: #2C3243;
             margin-left: auto;
-            text-align: right;
+            border-radius: 15px 15px 0 15px;
         }
 
         .assistant-message {
             background-color: #2C3243;
             color: white;
             margin-right: auto;
-            text-align: left;
+            border-radius: 15px 15px 15px 0;
         }
 
+        /* Message Status & Timing */
+        .message-status {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 4px;
+            display: block;
+            text-align: right;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: inline-flex;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #666;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        /* Input Area */
         #input-box {
             display: flex;
-            border-top: 1px solid #ccc;
-            padding: 0.5rem;
-            background-color: #f9fafb;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0);
             gap: 0.5rem;
+            position: sticky;
+            bottom: 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
 
-        #input-box input[type="text"] {
+        #user_input {
+            font-family: 'Arial', sans-serif;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #2C3243;
             flex: 1;
             padding: 0.75rem;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Focus state */
+        #user_input:focus {
+            border-color: #2C3243;
+            background: rgba(255, 255, 255, 1);
             outline: none;
-            font-size: 1rem;
         }
 
-        #input-box input[type="text"]::placeholder {
-            color: #bbb;
-            animation: placeholderFade 1.5s ease-in-out infinite alternate;
+        /* Placeholder styling */
+
+        #user_input::placeholder {
+            color: #6b7280;
+            opacity: 0.8;
+            font-weight: 400;
+            letter-spacing: -0.1px;
         }
 
-        #input-box button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            border: none;
+        #send_button {
             background: #2C3243;
-            color: #fff;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
             cursor: pointer;
+            transition: opacity 0.3s;
         }
 
-        #input-box {
-            display: flex;
-            padding: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            /* Subtle shadow */
-            gap: 0.5rem;
+        #send_button:hover {
+            opacity: 0.9;
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #chat-container {
+                height: 100dvh;
+            }
+
+            .message {
+                max-width: 85%;
+                font-size: 0.9rem;
+            }
+
+            #input-box {
+                padding: 0.75rem;
+            }
+
+            #user_input {
+                padding: 0.5rem;
+            }
+
+            .trust-badge {
+                bottom: 10px;
+                right: 10px;
+                padding: 0.5rem;
+            }
         }
 
         @keyframes fadeIn {
@@ -113,13 +215,15 @@
             }
         }
 
-        @keyframes placeholderFade {
-            0% {
-                color: #bbb;
+        @keyframes typing {
+
+            0%,
+            100% {
+                transform: translateY(0);
             }
 
-            100% {
-                color: #888;
+            50% {
+                transform: translateY(-4px);
             }
         }
     </style>
@@ -127,83 +231,97 @@
 </head>
 
 <body>
+    <div class="crisis-banner" id="crisisBanner">
+        <p>Need immediate help? <button id="emergency-btn">Connect with a therapist now</button></p>
+    </div>
 
     <div id="chat-container">
         <div id="messages"></div>
         <div id="input-box">
-            <input type="text" id="user_input" placeholder="Type your message..." autofocus />
+
+            <!-- Change the input type from "text" to "textarea" -->
+            <textarea id="user_input" placeholder="Type your message..." maxlength="500" autofocus autocomplete="off"
+                rows="1"></textarea>
             <button id="send_button">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
     </div>
 
+
+
     <script>
         const messagesDiv = document.getElementById('messages');
         const userInput = document.getElementById('user_input');
         const sendButton = document.getElementById('send_button');
-        const urlParams = new URLSearchParams(window.location.search);
-        const assistantId = urlParams.get('assistant_id') || 'default_assistant_id';
 
-        const API_URL = "https://elysia-fastapi.onrender.com/chat"; // Replace with your actual endpoint
-        let threadId = null;
+        const crisisBanner = document.getElementById('crisisBanner');
 
-        sendButton.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+        let isProcessing = false;
+
+
+        // Emergency Protocol
+        document.getElementById('emergency-btn').addEventListener('click', () => {
+            window.location.href = 'tel:1-800-273-8255';
         });
 
+        // Message Handling
         function appendMessage(content, role) {
             const msgDiv = document.createElement('div');
             msgDiv.className = `message ${role}-message`;
-            msgDiv.textContent = content;
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            msgDiv.innerHTML = `
+                ${content}
+                <span class="message-status">${timestamp}</span>
+            `;
+
             messagesDiv.appendChild(msgDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="dot"></div>
+                <div class="dot" style="animation-delay: 0.2s"></div>
+                <div class="dot" style="animation-delay: 0.4s"></div>
+            `;
+            messagesDiv.appendChild(typingDiv);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
         async function sendMessage() {
             const text = userInput.value.trim();
-            if (!text) return;
+            if (!text || isProcessing) return;
 
+            isProcessing = true;
             appendMessage(text, 'user');
             userInput.value = '';
+            showTypingIndicator();
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        "user_text": text,
-                        "assistant_id": assistantId,
-                        "thread_id": threadId
-                    })
-                });
+            // Simulated API call
+            setTimeout(async () => {
+                try {
+                    messagesDiv.removeChild(messagesDiv.lastChild);
+                    const response = "I'm here to listen. Please take your time to share what's on your mind.";
+                    appendMessage(response, 'assistant');
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    // Show crisis banner if anxious keywords detected
+                    if (text.toLowerCase().includes('help') || text.toLowerCase().includes('emergency')) {
+                        crisisBanner.style.display = 'block';
+                    }
+                } catch (e) {
+                    appendMessage("Connection error. Please try again.", 'assistant');
                 }
-
-                const data = await response.json();
-                threadId = data.thread_id;
-
-                if (data.response && data.response.assistant) {
-                    const assistantMessages = data.response.assistant;
-                    const assistantReply = Array.isArray(assistantMessages)
-                        ? assistantMessages.join(' ')
-                        : assistantMessages;
-
-                    appendMessage(assistantReply, 'assistant');
-                } else {
-                    appendMessage("No assistant reply returned.", 'assistant');
-                }
-            } catch (e) {
-                appendMessage("Error: " + e.message, 'assistant');
-            }
+                isProcessing = false;
+            }, 1500);
         }
-    </script>
 
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => e.key === 'Enter' && sendMessage());
+    </script>
 </body>
 
 </html>
