@@ -17,11 +17,9 @@
             border: 1px solid #ccc;
             width: 100%;
             height: 100vh;
-            /* a responsive height based on viewport height */
             display: flex;
             flex-direction: column;
             margin: 0 auto;
-            /* center horizontally on larger screens */
             box-sizing: border-box;
         }
 
@@ -36,16 +34,28 @@
             word-wrap: break-word;
             line-height: 1.4;
             animation: fadeIn 0.3s ease-in-out;
+            display: inline-block;
+            max-width: 75%;
         }
 
         .message.user {
             text-align: right;
             color: #004085;
+            background-color: #f4f4f6;
+            color: #2C3243;
+            border-radius: 8px;
+            padding: 12px;
+            margin-left: auto;
         }
 
         .message.assistant {
             text-align: left;
             color: #383d41;
+            background-color: #2C3243;
+            color: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-right: auto;
         }
 
         #input-box {
@@ -72,28 +82,6 @@
 
         #input-box button:hover {
             background: #126ccd;
-        }
-
-        .user-message {
-            background-color: #f4f4f6;
-            color: #2C3243;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 8px 0;
-            text-align: right;
-            max-width: 75%;
-            margin-left: auto;
-        }
-
-        .assistant-message {
-            background-color: #2C3243;
-            color: white;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 8px 0;
-            text-align: left;
-            max-width: 75%;
-            margin-right: auto;
         }
 
         @keyframes fadeIn {
