@@ -11,7 +11,6 @@
             margin: 0;
             padding: 0;
             height: 100vh;
-
         }
 
         #chat-container {
@@ -36,6 +35,7 @@
             margin-bottom: 1rem;
             word-wrap: break-word;
             line-height: 1.4;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
         .message.user {
@@ -73,6 +73,40 @@
         #input-box button:hover {
             background: #126ccd;
         }
+
+        .user-message {
+            background-color: #f4f4f6;
+            color: #2C3243;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            text-align: right;
+            max-width: 75%;
+            margin-left: auto;
+        }
+
+        .assistant-message {
+            background-color: #2C3243;
+            color: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            text-align: left;
+            max-width: 75%;
+            margin-right: auto;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -103,10 +137,9 @@
             }
         });
 
-
         function appendMessage(content, role) {
             const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${role}`;
+            msgDiv.className = `message ${role}-message`;
             msgDiv.textContent = content;
             messagesDiv.appendChild(msgDiv);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -123,7 +156,9 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        "user_text": text, "assistant_id": assistantId, "thread_id": threadId // Include thread_id if it exists })
+                        "user_text": text,
+                        "assistant_id": assistantId,
+                        "thread_id": threadId // Include thread_id if it exists
                     })
                 });
 
